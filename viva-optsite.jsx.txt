@@ -1,0 +1,438 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Heart, 
+  TrendingUp, 
+  MapPin, 
+  ShieldCheck, 
+  ChevronRight, 
+  Menu, 
+  X, 
+  Share2, 
+  Copy, 
+  ExternalLink,
+  DollarSign,
+  Calendar,
+  Users,
+  FileText
+} from 'lucide-react';
+
+// --- CONFIGURAÇÕES GERAIS ---
+const CAMPAIGN_CONFIG = {
+  name: "VIVA O PT! ❤️",
+  slogan: "Lula, o Norte e Nordeste querem comemorar com você!",
+  meta: 100000,
+  colors: {
+    primary: "#E31B23",
+    secondary: "#168447",
+    accent: "#FFD447",
+    bgLight: "#F5F5F5",
+    textDark: "#252525"
+  }
+};
+
+export default function VivaOPTSite() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
+  const [amount, setAmount] = useState('');
+  const [arrecadado, setArrecadado] = useState(0); // Simulação inicial
+  const [loadingPayment, setLoadingPayment] = useState(false);
+
+  // Simulação de cálculo de progresso
+  const progress = (arrecadado / CAMPAIGN_CONFIG.meta) * 100;
+  const restante = Math.max(0, CAMPAIGN_CONFIG.meta - arrecadado);
+
+  const suggestedValues = [10, 25, 50, 100];
+
+  const handlePayment = async (val) => {
+    setLoadingPayment(true);
+    // Aqui entraria a chamada para a API Route /api/create-payment
+    // que se comunica com a Vulcano Payments via VULCANO_API_KEY
+    setTimeout(() => {
+      setLoadingPayment(false);
+      alert("Integração com Vulcano Payments: Configure a API Key no backend da Vercel para gerar o Pix.");
+    }, 1500);
+  };
+
+  return (
+    <div className="min-h-screen font-sans text-[#252525] bg-[#F5F5F5]">
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+          <div 
+            className="text-2xl font-black cursor-pointer flex items-center gap-2" 
+            style={{ color: CAMPAIGN_CONFIG.colors.primary }}
+            onClick={() => setActiveTab('home')}
+          >
+            VIVA O PT! <Heart fill="#E31B23" size={24} />
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-6 font-semibold text-sm">
+            {['home', 'sobre', 'eventos', 'transparencia'].map((tab) => (
+              <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`capitalize transition-colors ${activeTab === tab ? 'text-[#E31B23] underline underline-offset-4' : 'hover:text-[#E31B23]'}`}
+              >
+                {tab}
+              </button>
+            ))}
+            <button 
+              onClick={() => setActiveTab('contribuir')}
+              className="bg-[#E31B23] text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all shadow-lg"
+            >
+              Contribuir
+            </button>
+          </nav>
+
+          {/* Mobile Toggle */}
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t p-4 flex flex-col gap-4 animate-in slide-in-from-top">
+            {['home', 'sobre', 'eventos', 'transparencia', 'contribuir'].map((tab) => (
+              <button 
+                key={tab}
+                onClick={() => { setActiveTab(tab); setIsMenuOpen(false); }}
+                className="text-left py-2 font-medium capitalize border-b border-gray-100"
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {/* MAIN CONTENT */}
+      <main>
+        {activeTab === 'home' && (
+          <>
+            {/* HERO SECTION */}
+            <section className="relative overflow-hidden bg-white py-16 md:py-24">
+              <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+                <div className="z-10">
+                  <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6" style={{ color: CAMPAIGN_CONFIG.colors.primary }}>
+                    {CAMPAIGN_CONFIG.name}
+                  </h1>
+                  <p className="text-2xl md:text-3xl font-bold mb-4 text-gray-700">
+                    {CAMPAIGN_CONFIG.slogan}
+                  </p>
+                  <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                    Uma iniciativa de mobilização para organizar encontros e celebrações populares, 
+                    com planejamento logístico para cidades das regiões Norte e Nordeste.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button 
+                      onClick={() => setActiveTab('contribuir')}
+                      className="bg-[#E31B23] text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-xl flex items-center justify-center gap-2"
+                    >
+                      FAZER MINHA CONTRIBUIÇÃO <ChevronRight size={20} />
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('transparencia')}
+                      className="bg-white border-2 border-gray-200 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
+                    >
+                      ACOMPANHAR ARRECADAÇÃO <TrendingUp size={20} />
+                    </button>
+                  </div>
+                  <p className="mt-8 text-xs text-gray-400 italic">
+                    Organizado por mobilizadores populares. A confirmação de cada evento depende de validações logísticas e financeiras.
+                  </p>
+                </div>
+                <div className="relative">
+                  <img 
+                    src="https://images.pexels.com/photos/12919854/pexels-photo-12919854.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" 
+                    alt="Celebração Popular Brasileira" 
+                    className="rounded-3xl shadow-2xl object-cover w-full h-[500px]"
+                  />
+                  <div className="absolute -bottom-6 -left-6 bg-[#FFD447] p-6 rounded-2xl shadow-xl hidden md:block">
+                    <p className="font-black text-2xl">Meta: R$ 100k</p>
+                    <p className="text-sm font-medium">Ajude a mobilizar o Brasil!</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* DASHBOARD DE ARRECADAÇÃO */}
+            <section className="py-16 bg-[#F5F5F5]">
+              <div className="max-w-4xl mx-auto px-4">
+                <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-black flex items-center gap-2">
+                      <TrendingUp style={{ color: CAMPAIGN_CONFIG.colors.primary }} /> 
+                      Progresso da Campanha
+                    </h2>
+                    <span className="text-sm font-bold bg-gray-100 px-3 py-1 rounded-full text-gray-500">
+                      Atualizado agora
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-xs text-gray-500 font-bold uppercase">Meta</p>
+                      <p className="text-xl font-black">R$ 100.000</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-xs text-gray-500 font-bold uppercase">Arrecadado</p>
+                      <p className="text-xl font-black text-[#168447]">R$ {arrecadado.toLocaleString('pt-BR')}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-xs text-gray-500 font-bold uppercase">Faltam</p>
+                      <p className="text-xl font-black text-red-500">R$ {restante.toLocaleString('pt-BR')}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-2xl">
+                      <p className="text-xs text-gray-500 font-bold uppercase">Progresso</p>
+                      <p className="text-xl font-black">{progress.toFixed(1)}%</p>
+                    </div>
+                  </div>
+
+                  <div className="w-full bg-gray-200 h-6 rounded-full overflow-hidden mb-4">
+                    <div 
+                      className="h-full transition-all duration-1000 ease-out" 
+                      style={{ width: `${Math.min(progress, 100)}%`, backgroundColor: CAMPAIGN_CONFIG.colors.primary }}
+                    />
+                  </div>
+                  <p className="text-center text-sm text-gray-500 font-medium">
+                    A cada contribuição, estamos mais perto de comemorar juntos!
+                  </p>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
+        {activeTab === 'contribuir' && (
+          <section className="py-16 max-w-3xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-black mb-4" style={{ color: CAMPAIGN_CONFIG.colors.primary }}>Faça sua Contribuição</h2>
+              <p className="text-gray-600">Escolha um valor para ajudar na logística dos eventos no Norte e Nordeste.</p>
+            </div>
+
+            <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                {suggestedValues.map(val => (
+                  <button 
+                    key={val}
+                    onClick={() => setAmount(val.toString())}
+                    className={`py-4 rounded-xl font-bold transition-all border-2 ${amount === val.toString() ? 'border-[#E31B23] bg-red-50 text-[#E31B23]' : 'border-gray-200 hover:border-gray-300'}`}
+                  >
+                    R$ {val}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mb-8">
+                <label className="block text-sm font-bold text-gray-700 mb-2">Outro Valor (R$)</label>
+                <input 
+                  type="number" 
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Ex: 150.00"
+                  className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#E31B23] outline-none transition-all text-lg font-semibold"
+                />
+              </div>
+
+              <div className="bg-yellow-50 p-4 rounded-xl mb-8 flex gap-3 items-start border border-yellow-100">
+                <ShieldCheck className="text-yellow-600 shrink-0" size={20} />
+                <p className="text-xs text-yellow-800 leading-relaxed">
+                  Ao contribuir, você concorda com os <strong>Termos de Contribuição</strong>. 
+                  Os recursos serão destinados exclusivamente ao custeio logístico da equipe organizadora.
+                </p>
+              </div>
+
+              <button 
+                disabled={!amount || loadingPayment}
+                onClick={() => handlePayment(amount)}
+                className="w-full py-5 rounded-2xl font-black text-xl text-white transition-all shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                style={{ backgroundColor: CAMPAIGN_CONFIG.colors.primary }}
+              >
+                {loadingPayment ? "PROCESSANDO..." : "CONTINUAR PARA PAGAMENTO"}
+                {!loadingPayment && <ChevronRight size={24} />}
+              </button>
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'transparencia' && (
+          <section className="py-16 max-w-5xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-black mb-4">TRANSPARÊNCIA: CADA CONTRIBUIÇÃO IMPORTA</h2>
+              <p className="text-gray-600">Acompanhe a gestão dos recursos e a prestação de contas em tempo real.</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="md:col-span-2 space-y-6">
+                <div className="bg-white p-6 rounded-2xl shadow-md border-l-8 border-[#168447]">
+                  <h3 className="font-black text-xl mb-4 flex items-center gap-2">
+                    <FileText size={20} /> Relatórios Financeiros
+                  </h3>
+                  <div className="space-y-4">
+                    {[1, 2].map(i => (
+                      <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group">
+                        <div>
+                          <p className="font-bold">Relatório de Gastos - Outubro 2026</p>
+                          <p className="text-xs text-gray-500">Publicado em 20/10/2026 • PDF</p>
+                        </div>
+                        <ExternalLink size={18} className="text-gray-400 group-hover:text-[#E31B23]" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-md border-l-8 border-[#FFD447]">
+                  <h3 className="font-black text-xl mb-4 flex items-center gap-2">
+                    <DollarSign size={20} /> Orçamento Previsto
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead>
+                        <tr className="border-b text-gray-400 uppercase text-xs">
+                          <th className="py-3">Categoria</th>
+                          <th className="py-3">Previsto</th>
+                          <th className="py-3">Realizado</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y">
+                        <tr>
+                          <td className="py-3 font-medium">Transporte Aéreo</td>
+                          <td className="py-3">R$ 40.000</td>
+                          <td className="py-3 text-gray-400">Aguardando</td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 font-medium">Hospedagem</td>
+                          <td className="py-3">R$ 20.000</td>
+                          <td className="py-3 text-gray-400">Aguardando</td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 font-medium">Logística Local</td>
+                          <td className="py-3">R$ 30.000</td>
+                          <td className="py-3 text-gray-400">Aguardando</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-2xl shadow-md">
+                  <h3 className="font-black text-lg mb-4">Resumo Financeiro</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Total Confirmado:</span>
+                      <span className="font-bold text-[#168447]">R$ {arrecadado}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Total Reembolsos:</span>
+                      <span className="font-bold text-red-500">R$ 0,00</span>
+                    </div>
+                    <div className="flex justify-between text-sm border-t pt-4">
+                      <span className="font-bold">Saldo Disponível:</span>
+                      <span className="font-black text-lg">R$ {arrecadado}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'eventos' && (
+          <section className="py-16 max-w-6xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-black mb-4">Cidades e Eventos</h2>
+              <p className="text-gray-600">Planejamento de mobilização para as regiões Norte e Nordeste.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {['Norte', 'Nordeste'].map(regiao => (
+                <div key={regiao} className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+                  <h3 className="text-2xl font-black mb-6 flex items-center gap-2" style={{ color: regiao === 'Norte' ? '#168447' : '#E31B23' }}>
+                    <MapPin /> Região {regiao}
+                  </h3>
+                  <div className="space-y-4">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="p-4 border rounded-2xl hover:border-gray-300 transition-all group">
+                        <div className="flex justify-between items-start mb-2">
+                          <p className="font-bold text-lg">Cidade Exemplo {i}</p>
+                          <span className="text-[10px] font-black uppercase px-2 py-1 bg-gray-100 rounded-md text-gray-500">Em Planejamento</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <span className="flex items-center gap-1"><Calendar size={14} /> 01/01/2027</span>
+                          <span className="flex items-center gap-1"><Users size={14} /> Estimativa: 500 pessoas</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'sobre' && (
+          <section className="py-16 max-w-3xl mx-auto px-4 text-center">
+            <h2 className="text-4xl font-black mb-8" style={{ color: CAMPAIGN_CONFIG.colors.primary }}>Sobre a Campanha</h2>
+            <div className="bg-white p-8 rounded-3xl shadow-xl text-left leading-relaxed space-y-6">
+              <p>
+                O <strong>VIVA O PT!</strong> é uma iniciativa independente de mobilização popular. Nosso objetivo é 
+                organizar celebrações e encontros que reflitam a alegria e a esperança do povo brasileiro, 
+                especialmente nas regiões Norte e Nordeste.
+              </p>
+              <p>
+                A arrecadação visa cobrir custos logísticos essenciais: passagens, hospedagem para a equipe 
+                de organização, aluguel de equipamentos de som e infraestrutura básica para os eventos.
+              </p>
+              <div className="p-4 bg-gray-50 rounded-xl border-l-4 border-red-500 italic text-sm text-gray-600">
+                "Acreditamos que a comemoração é um ato político de resistência e alegria."
+              </div>
+            </div>
+          </section>
+        )}
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-white border-t py-12 mt-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-12 mb-12">
+            <div>
+              <div className="text-xl font-black mb-4" style={{ color: CAMPAIGN_CONFIG.colors.primary }}>
+                VIVA O PT! ❤️
+              </div>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Iniciativa de mobilização popular para celebrações nas regiões Norte e Nordeste do Brasil.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Links Rápidos</h4>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li className="hover:text-red-500 cursor-pointer" onClick={() => setActiveTab('transparencia')}>Transparência</li>
+                <li className="hover:text-red-500 cursor-pointer" onClick={() => setActiveTab('sobre')}>Sobre a Campanha</li>
+                <li className="hover:text-red-500 cursor-pointer">Política de Privacidade</li>
+                <li className="hover:text-red-500 cursor-pointer">Termos de Contribuição</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Compartilhe</h4>
+              <div className="flex gap-3">
+                <button className="p-3 bg-green-100 text-green-600 rounded-full hover:bg-green-200 transition-all">
+                  <Share2 size={20} />
+                </button>
+                <button className="p-3 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-all">
+                  <Copy size={20} />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t pt-8 text-center text-xs text-gray-400">
+            © 2026 VIVA O PT! ❤️ — Organizado por Mobilizadores Populares.
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
